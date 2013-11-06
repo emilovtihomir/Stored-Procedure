@@ -1,0 +1,28 @@
+create or replace
+function udf_check_number(p_num_str varchar2)
+return char as
+  v_is_num char;
+  v_num int;
+  v_first_char varchar2(1);
+begin
+  if length(p_num_str) between 1 and 18 then
+    begin
+      v_num := to_number(p_num_str, '999999999999999999');
+      v_first_char := substr(p_num_str, 0, 1);
+      
+      if (v_first_char = '0') then
+        v_is_num := 'N';
+      else
+        v_is_num := 'Y';
+      end if;
+      
+      exception 
+        when others then
+          v_is_num := 'N';
+    end;
+  else
+    v_is_num := 'N';
+  end if;
+  
+  return v_is_num;
+end;

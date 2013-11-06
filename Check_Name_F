@@ -1,0 +1,33 @@
+create or replace 
+function CHECK_NAME(p_name_str varchar2)
+return char as
+  v_is_valid varchar2(1);
+  v_capitals varchar2(250);
+  v_num integer;
+begin
+  if length(p_name_str) >= 5 then
+    v_num := regexp_replace(p_name_str, '[^[:digit:]]');
+    if (v_num is null) then
+      begin
+        v_capitals := initcap(p_name_str);
+      if  p_name_str = v_capitals then 
+        begin
+          v_num := regexp_count(p_name_str, ' ');
+	if v_num = 1 or v_num = 2 then
+	  v_is_valid := 'Y';
+	else
+	   v_is_valid := 'N';
+	end if;
+        end;
+      else
+        v_is_valid := 'N';
+      end if;
+			end;
+    else
+      v_is_valid := 'N';
+    end if;
+  else
+    v_is_valid := 'N';
+  end if;
+  return v_is_valid;
+end;
